@@ -8,6 +8,8 @@ const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 const GOOGLE_AUTH_DOMAIN = process.env.GOOGLE_AUTH_DOMAIN;
 const GOOGLE_PROJECT_ID = process.env.GOOGLE_PROJECT_ID;
 
+// const firebaseConfig = require('/path/to/serviceAccountKey.json');
+
 const config = {
   apiKey: GOOGLE_API_KEY,
   authDomain: GOOGLE_AUTH_DOMAIN,
