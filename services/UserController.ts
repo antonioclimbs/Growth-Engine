@@ -2,27 +2,24 @@
 import "firebase/firestore";
 
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, updateDoc, doc, Timestamp } from "firebase/firestore";
+// import * as firebase from "firebase/app";
+import { getFirestore, collection, addDoc, updateDoc, doc, Timestamp, Firestore } from "firebase/firestore";
 
-const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
-const GOOGLE_AUTH_DOMAIN = process.env.GOOGLE_AUTH_DOMAIN;
-const GOOGLE_PROJECT_ID = process.env.GOOGLE_PROJECT_ID;
-
-// const firebaseConfig = require('/path/to/serviceAccountKey.json');
-
-const config = {
-  apiKey: GOOGLE_API_KEY,
-  authDomain: GOOGLE_AUTH_DOMAIN,
-  projectId: GOOGLE_PROJECT_ID,
+const firebaseConfig = {
+  apiKey: "AIzaSyCK1CTAwI_3ZE2c69sHycgfoorcn7lvyi4",
+  authDomain: "growth-engine-384817.firebaseapp.com",
+  projectId: "growth-engine-384817",
+  storageBucket: "growth-engine-384817.appspot.com",
+  messagingSenderId: "483245576152",
+  appId: "1:483245576152:web:1e86c5e3c5c8dfc13bacad",
+  measurementId: "G-53JBP5DV40"
 };
 
-const app = initializeApp(config);
+// console.log(firebaseConfig)
+
+// !firebase.apps.length ? firebase.initializeApp(config) : firebase.app()
+const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
-type updateData = {
-  email?: string,
-
-}
 
 const UserController = {
   createUser: async function (email: string) {
@@ -42,6 +39,7 @@ const UserController = {
       console.error("Error adding document: ", e);
     }
   },
+
   createPrompt: async function (email: string, prompt: string, data: JSON) {
     try {
       const userDocRef = await doc(collection(db, email));
