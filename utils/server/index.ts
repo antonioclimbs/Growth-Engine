@@ -26,7 +26,7 @@ export class OpenAIError extends Error {
 export const OpenAIStream = async (
   model: OpenAIModel,
   systemPrompt: string,
-  temperature : number,
+  temperature: number,
   key: string,
   messages: Message[],
 ) => {
@@ -48,8 +48,9 @@ export const OpenAIStream = async (
       }),
     },
     method: 'POST',
+    // hard coding model type right now
     body: JSON.stringify({
-      ...(OPENAI_API_TYPE === 'openai' && {model: model.id}),
+      ...(OPENAI_API_TYPE === 'openai' && { model: 'gpt-3.5-turbo' }),
       messages: [
         {
           role: 'system',
@@ -77,8 +78,7 @@ export const OpenAIStream = async (
       );
     } else {
       throw new Error(
-        `OpenAI API returned an error: ${
-          decoder.decode(result?.value) || result.statusText
+        `OpenAI API returned an error: ${decoder.decode(result?.value) || result.statusText
         }`,
       );
     }

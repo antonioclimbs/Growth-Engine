@@ -7,15 +7,48 @@ import { SupportedExportFormats } from '@/types/export';
 
 import { SidebarButton } from '../Sidebar/SidebarButton';
 
+import * as Papa from 'papaparse';
+
 interface Props {
   onImport: (data: SupportedExportFormats) => void;
 }
 
 export const Import: FC<Props> = ({ onImport }) => {
   const { t } = useTranslation('sidebar');
+  function processData(parsedData: JSON) {
+    // const parsedData = Papa.parse(csvData);
+
+    // do something with parsed data
+    console.log(parsedData);
+  }
   return (
     <>
       <input
+        id="import-file"
+        className="sr-only"
+        tabIndex={-1}
+        type="file"
+        accept=".csv, .json"
+        onChange={(e) => {
+          if (!e.target.files?.length) return;
+          const file = e.target.files[0];
+          const reader = new FileReader();
+
+          reader.onload = (e) => {
+            let parsedData;
+            if (file.type === "text/csv") {
+              const csvData = e.target?.result as string;
+              parsedData = Papa.parse(csvData);
+            } else {
+              parsedData = JSON.parse(e.target?.result as string);
+            };
+            // process data here
+            processData(parsedData);
+          };
+          reader.readAsText(file);
+        }}
+      />
+      {/* <input
         id="import-file"
         className="sr-only"
         tabIndex={-1}
@@ -32,7 +65,7 @@ export const Import: FC<Props> = ({ onImport }) => {
           };
           reader.readAsText(file);
         }}
-      />
+      /> */}
 
       <SidebarButton
         text={t('Import data')}
