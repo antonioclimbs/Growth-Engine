@@ -3,7 +3,8 @@ import "firebase/firestore";
 
 import { initializeApp } from "firebase/app";
 // import * as firebase from "firebase/app";
-import { getFirestore, collection, addDoc, updateDoc, doc, Timestamp, Firestore } from "firebase/firestore";
+import { getFirestore, collection, addDoc, updateDoc, doc, Timestamp, setDoc } from "firebase/firestore";
+// const { initializeAppCheck, ReCaptchaV3Provider, ReCaptchaEnterpriseProvider } = require("firebase/app-check");
 
 const firebaseConfig = {
   apiKey: "AIzaSyCK1CTAwI_3ZE2c69sHycgfoorcn7lvyi4",
@@ -15,16 +16,18 @@ const firebaseConfig = {
   measurementId: "G-53JBP5DV40"
 };
 
-// console.log(firebaseConfig)
-
-// !firebase.apps.length ? firebase.initializeApp(config) : firebase.app()
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
+// const appCheck = initializeAppCheck(app, {
+//   provider: new ReCaptchaV3Provider('growthenginesecretkey'),
+//   isTokenAutoRefreshEnabled: true
+// });
 
 const UserController = {
   createUser: async function (email: string) {
     try {
-      const userDocRef = await addDoc(collection(db, "users"), {
+      const userDocRef = await setDoc(doc(db, "users"), {
         email,
         dateCreated: Timestamp,
       });
@@ -34,7 +37,7 @@ const UserController = {
       //   prompt,
       //   data
       // })
-      console.log("Document written with ID: ", userDocRef.id);
+      console.log("Document written: ", userDocRef);
     } catch (e) {
       console.error("Error adding document: ", e);
     }
@@ -54,6 +57,22 @@ const UserController = {
     }
 
   },
+
+  testCreateController: async function () {
+    try {
+      const docRef = await addDoc(collection(db, "users"), {
+        first: "Ada",
+        last: "Lovelace",
+        born: 1815
+      });
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+
+  }
+
+
   // updateUser: async function (email: string) {
   //   const docRef = doc(db, "users", email);
 

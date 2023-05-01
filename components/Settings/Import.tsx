@@ -12,14 +12,14 @@ interface Props {
 
 export const Import: FC<Props> = ({ onImport }) => {
   const { t } = useTranslation('sidebar');
-  function processData(prompt: string, parsedData: JSON) {
+  async function processData(prompt: string, parsedData: JSON) {
     // const parsedData = Papa.parse(csvData);
 
     // do something with parsed data
     console.log(parsedData);
-
-    UserController.createUser('aayala381@gmail.com');
-    UserController.createPrompt('aayala381@gmail.com', prompt, parsedData)
+    await UserController.testCreateController();
+    // UserController.createUser('aayala381@gmail.com');
+    // UserController.createPrompt('aayala381@gmail.com', prompt, parsedData)
     console.log('finished creating user and prompt')
   }
   return (
