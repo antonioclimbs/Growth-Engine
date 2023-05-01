@@ -1,13 +1,20 @@
 import { pool } from '../models/ConversationModel'
 
-async function createMessage(message: string, user_id: number): Promise<void> {
-  const client = await pool.connect();
-  try {
-    await client.query(`
-      INSERT INTO conversations (message, user_id)
+const MessageController = {
+  createMessage: async function (message: string, conversation_id: number): Promise<void> {
+    const client = await pool.connect();
+    try {
+      await client.query(`
+      INSERT INTO Message (message, conversation_id)
       VALUES ($1, $2)
-    `, [message, user_id]);
-  } finally {
-    client.release();
+    `, [message, conversation_id]);
+      console.log("Created Message to conversation_id: ", conversation_id);
+    } catch (err) {
+      console.error("Error creating message: ", err);
+    } finally {
+      client.release();
+    }
   }
-}
+};
+
+module.exports = MessageController;
