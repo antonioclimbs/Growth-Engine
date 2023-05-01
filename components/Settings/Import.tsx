@@ -11,11 +11,28 @@ interface Props {
 
 export const Import: FC<Props> = ({ onImport }) => {
   const { t } = useTranslation('sidebar');
-  async function processData(prompt: string, parsedData: JSON) {
+  async function processData(prompt: string, parsedData: JSON, filename: string) {
+    const conversation_id = 12345;
     // const parsedData = Papa.parse(csvData);
+    const body = JSON.stringify({
+      data: parsedData,
+      filename,
+      conversation_id
+    });
+    // console.log('checking what body is within processData function:', body)
 
     // do something with parsed data
-    console.log(parsedData);
+    // need to get conversation id
+    // look to conversation.ts
+    const response = await fetch('/api/controllers/dataController', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body,
+    });
+
+    // console.log(parsedData);
     console.log('finished creating user and prompt')
   }
   return (
@@ -40,7 +57,7 @@ export const Import: FC<Props> = ({ onImport }) => {
               parsedData = JSON.parse(e.target?.result as string);
             };
             // process data here
-            processData('why?', parsedData);
+            processData('why?', parsedData, file.name);
           };
           reader.readAsText(file);
         }}

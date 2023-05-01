@@ -101,6 +101,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           temperature: updatedConversation.temperature,
         };
         const endpoint = getEndpoint(plugin);
+        // console.log('endpoint is:', endpoint)
         let body;
         if (!plugin) {
           body = JSON.stringify(chatBody);
@@ -136,6 +137,10 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           homeDispatch({ field: 'messageIsStreaming', value: false });
           return;
         }
+
+        // const check = await body;
+        // console.log('data in chat.tsx:', check)
+
         if (!plugin) {
           if (updatedConversation.messages.length === 1) {
             const { content } = message;
@@ -199,7 +204,9 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           }
           saveConversation(updatedConversation);
           const updatedConversations: Conversation[] = conversations.map(
+            // each conversatino is seperate, but not each message, those are all in the massive JSON object that can be sent into the sql database
             (conversation) => {
+              console.log('conversation within saveConversation', JSON.stringify(conversation))
               if (conversation.id === selectedConversation.id) {
                 return updatedConversation;
               }

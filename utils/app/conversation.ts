@@ -22,6 +22,8 @@ export const updateConversation = (
 };
 
 export const saveConversation = (conversation: Conversation) => {
+  // console.log('checking what converstaion is within saveConversation function: ', conversation)
+  // fetch('/api/controllers/')
   localStorage.setItem('selectedConversation', JSON.stringify(conversation));
 };
 
