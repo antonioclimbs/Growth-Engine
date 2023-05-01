@@ -4,7 +4,6 @@ import { useTranslation } from 'next-i18next';
 import { SupportedExportFormats } from '@/types/export';
 import { SidebarButton } from '../Sidebar/SidebarButton';
 import * as Papa from 'papaparse';
-import UserController from '@/services/UserController';
 
 interface Props {
   onImport: (data: SupportedExportFormats) => void;
@@ -17,9 +16,6 @@ export const Import: FC<Props> = ({ onImport }) => {
 
     // do something with parsed data
     console.log(parsedData);
-    await UserController.testCreateController();
-    // UserController.createUser('aayala381@gmail.com');
-    // UserController.createPrompt('aayala381@gmail.com', prompt, parsedData)
     console.log('finished creating user and prompt')
   }
   return (
