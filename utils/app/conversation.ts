@@ -28,14 +28,6 @@ export const saveConversation = async (conversation: Conversation) => {
     body: JSON.stringify(conversation),
   })
 
-  // const response = await fetch('/api/controllers/dataController', {
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  //   body,
-  // });
-
   localStorage.setItem('selectedConversation', JSON.stringify(conversation));
 };
 
