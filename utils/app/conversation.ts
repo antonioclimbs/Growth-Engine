@@ -21,9 +21,21 @@ export const updateConversation = (
   };
 };
 
-export const saveConversation = (conversation: Conversation) => {
+export const saveConversation = async (conversation: Conversation) => {
   // console.log('checking what converstaion is within saveConversation function: ', conversation)
-  // fetch('/api/controllers/')
+  await fetch('/api/controllers/conversationController', {
+    method: 'PUT',
+    body: JSON.stringify(conversation),
+  })
+
+  // const response = await fetch('/api/controllers/dataController', {
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //   },
+  //   body,
+  // });
+
   localStorage.setItem('selectedConversation', JSON.stringify(conversation));
 };
 

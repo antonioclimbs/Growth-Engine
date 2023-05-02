@@ -206,7 +206,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           const updatedConversations: Conversation[] = conversations.map(
             // each conversatino is seperate, but not each message, those are all in the massive JSON object that can be sent into the sql database
             (conversation) => {
-              console.log('conversation within saveConversation', JSON.stringify(conversation))
+              // console.log('conversation within saveConversation', JSON.stringify(conversation))
               if (conversation.id === selectedConversation.id) {
                 return updatedConversation;
               }
