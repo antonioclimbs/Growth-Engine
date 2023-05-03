@@ -3,7 +3,9 @@ import db from "../../../utils/server/models/ConversationModel";
 const uuid = require('uuid');
 
 export default async function conversationController(req: NextApiRequest, res: NextApiResponse) {
-  const { messages, id, model, name, prompt, temperature } = JSON.parse(req.body);
+  let parsed = req.body;
+  if (typeof parsed === 'string') parsed = JSON.parse(req.body)
+  const { messages, id, model, name, prompt, temperature } = parsed;
   const testEmail = 'hello@maslo.ai'
   const email = req.body.email ? req.body.email : testEmail;
   const formatedMessages = { 'messages': messages }

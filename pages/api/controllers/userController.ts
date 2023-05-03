@@ -11,7 +11,7 @@ export default async function userController(req: NextApiRequest, res: NextApiRe
       console.log("Created User with email: ", email));
     res.status(201).json({ message: "User created successfully" });
   } catch (err) {
-    console.error("Error in createUser method: ", err);
+    console.error("Error in userController: ", err);
     res.status(500).json({ message: "Error creating user" });
   }
 };

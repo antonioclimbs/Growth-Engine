@@ -24,10 +24,11 @@ export const updateConversation = (
 export const saveConversation = async (conversation: Conversation) => {
   // console.log('checking what converstaion is within saveConversation function: ', conversation)
   await fetch('/api/controllers/conversationController', {
-    method: 'PUT',
+    method: 'POST',
     body: JSON.stringify(conversation),
   })
-
+  // const currentURL = window.location.href;
+  // console.log(currentURL);
   localStorage.setItem('selectedConversation', JSON.stringify(conversation));
 };
 
