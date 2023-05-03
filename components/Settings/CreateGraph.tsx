@@ -150,7 +150,7 @@ export const CreateGraph = (message: any) => {
                     };
 
                     // onUpdatePrompt(updatedPrompt);
-                    // onClose();
+                    setShowModal(false);
                   }}
                 >
                   {t('Save')}
