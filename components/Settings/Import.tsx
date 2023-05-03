@@ -32,8 +32,8 @@ export const Import: FC<Props> = ({ onImport }) => {
       body,
     });
 
-    // console.log(parsedData);
-    console.log('finished creating user and prompt')
+    console.log('response within Import.tsx', response);
+    // console.log('finished creating user and prompt')
   }
   return (
     <>

@@ -1,6 +1,6 @@
 import { Pool, Client } from 'pg';
 
-const myURI = process.env.URI;
+const myURI = process.env.GOOGLE_URI;
 
 const pool = new Pool({
   connectionString: myURI,
