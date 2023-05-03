@@ -9,33 +9,23 @@ interface Props {
   onImport: (data: SupportedExportFormats) => void;
 }
 
+export async function processData(parsedData: JSON, filename: string) {
+  const body = JSON.stringify({
+    data: parsedData,
+    filename,
+  });
 
+  await fetch('/api/controllers/dataController', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body,
+  });
+}
 
 export const Import: FC<Props> = ({ onImport }) => {
   const { t } = useTranslation('sidebar');
-  async function processData(parsedData: JSON, filename: string) {
-    const conversation_id = '12345';
-    localStorage.setItem('parsedData', JSON.stringify(parsedData));
-
-    const body = JSON.stringify({
-      data: parsedData,
-      filename,
-      conversation_id
-    });
-
-    // do something with parsed data
-    // need to get conversation id
-    // look to conversation.ts
-    await fetch('/api/controllers/dataController', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body,
-    });
-
-    console.log(localStorage)
-  }
   return (
     <>
       <input

@@ -1,29 +1,61 @@
 import { IconGraph } from '@tabler/icons-react';
 import { useTranslation } from 'next-i18next';
 import { SidebarButton } from '../Sidebar/SidebarButton';
-import { useState } from 'react';
+import { useState, useRef, KeyboardEvent, useContext, useEffect, FC } from 'react';
 import { Prompt } from '@/types/prompt';
-import { useCreateReducer } from '@/hooks/useCreateReducer';
+import { processData } from './Import';
+import * as Papa from 'papaparse';
 
-// interface Props {
-//   message: string
-// prompt: Prompt;
-// onClose: () => void;
-// onUpdatePrompt: (prompt: Prompt) => void;
-// }
+interface Props {
+  prompt: {
+    name: string,
+    description: string,
+    content: string,
+  };
+}
 
-/*
-export const Import: FC<Props> = ({ onImport }) => {
+export const CreateGraph: FC<Props> = ({ prompt }) => {
   const { t } = useTranslation('sidebar');
   const [showModal, setShowModal] = useState(false);
 
-  const handleClick = () => {
-    setShowModal(true);
+  const [name, setName] = useState(prompt.name);
+  const [description, setDescription] = useState(prompt.description);
+  const [content, setContent] = useState(prompt.content);
+  const [data, setParsedData] = useState('')
+
+  const modalRef = useRef<HTMLDivElement>(null);
+  const nameInputRef = useRef<HTMLInputElement>(null);
+
+  const handleEnter = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      // onUpdatePrompt({ ...prompt, name, description, content: content.trim() });
+      setShowModal(false);
+    }
   };
 
-  const handleClose = () => {
-    setShowModal(false);
-  };
+  useEffect(() => {
+    const handleMouseDown = (e: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+        window.addEventListener('mouseup', handleMouseUp);
+      }
+    };
+
+    const handleMouseUp = (e: MouseEvent) => {
+      window.removeEventListener('mouseup', handleMouseUp);
+      setShowModal(false);
+    };
+
+    window.addEventListener('mousedown', handleMouseDown);
+
+    return () => {
+      window.removeEventListener('mousedown', handleMouseDown);
+    };
+  }, [() => setShowModal(false)]);
+
+  useEffect(() => {
+    nameInputRef.current?.focus();
+  }, []);
+
   return (
     <>
       <input
@@ -42,47 +74,30 @@ export const Import: FC<Props> = ({ onImport }) => {
             if (file.type === "text/csv") {
               const csvData = e.target?.result as string;
               parsedData = Papa.parse(csvData);
+              // parsedData = Papa.parse(csvData);
             } else {
               parsedData = JSON.parse(e.target?.result as string);
+              // parsedData = JSON.parse(e.target?.result as string);
             };
             // process data here
+            setParsedData(parsedData)
             processData(parsedData, file.name);
           };
-          setShowModal(true);
           reader.readAsText(file);
         }}
       />
       <SidebarButton
-        text={t('Import data')}
-        icon={<IconGraph size={18} />}
-        onClick={handleClick}
-      />
-      <Modal showModal={showModal} onClose={handleClose} />
-    </>
-  );
-};
-*/
-
-export const CreateGraph = (prompt: Prompt) => {
-  const { t } = useTranslation('sidebar');
-  const [showModal, setShowModal] = useState(false);
-
-  const [name, setName] = useState(prompt.name);
-  const [description, setDescription] = useState(prompt.description);
-  const [content, setContent] = useState(prompt.content);
-
-  return (
-    <>
-      <SidebarButton
         text={t('Create graph')}
         icon={<IconGraph size={18} />}
         onClick={() => {
-          const importFile = document.querySelector(
-            '#import-file',
+          const createFile = document.querySelector(
+            '#create-graph',
           ) as HTMLInputElement;
-          if (importFile) {
-            importFile.click();
+          if (createFile) {
+            createFile.click();
+            console.log(createFile)
           }
+
           setShowModal(true)
         }}
       />
@@ -101,6 +116,18 @@ export const CreateGraph = (prompt: Prompt) => {
                 className="dark:border-netural-400 inline-block max-h-[400px] transform overflow-y-auto rounded-lg border border-gray-300 bg-white px-4 pt-5 pb-4 text-left align-bottom shadow-xl transition-all dark:bg-[#202123] sm:my-8 sm:max-h-[600px] sm:w-full sm:max-w-lg sm:p-6 sm:align-middle"
                 role="dialog"
               >
+                <div className="text-sm font-bold text-black dark:text-neutral-200">
+                  {t('Name')}
+                </div>
+                <input
+                  className="mt-2 w-full rounded-lg border border-neutral-500 px-4 py-2 text-neutral-900 shadow focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-[#40414F] dark:text-neutral-100"
+                  placeholder={t('A name for your prompt.') || ''}
+                  value={name}
+                  onChange={(e) => {
+                    setName(e.target.value)
+                    console.log(name)
+                  }}
+                />
                 <div className="mt-6 text-sm font-bold text-black dark:text-neutral-200">
                   {t('Description')}
                 </div>
@@ -109,23 +136,29 @@ export const CreateGraph = (prompt: Prompt) => {
                   style={{ resize: 'none' }}
                   placeholder={t('A description for your prompt.') || ''}
                   value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  onChange={(e) => {
+                    setDescription(e.target.value)
+                    console.log(description)
+                  }}
                   rows={3}
                 />
 
                 <div className="mt-6 text-sm font-bold text-black dark:text-neutral-200">
-                  {t('Prompt')}
+                  {t('What do you want to do with your data?')}
                 </div>
                 <textarea
                   className="mt-2 w-full rounded-lg border border-neutral-500 px-4 py-2 text-neutral-900 shadow focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-[#40414F] dark:text-neutral-100"
                   style={{ resize: 'none' }}
                   placeholder={
                     t(
-                      'Prompt content. Use {{}} to denote a variable. Ex: {{name}} is a {{adjective}} {{noun}}',
+                      'Use {{}} to denote a variable. Ex: {{name}} is a {{adjective}} {{noun}}',
                     ) || ''
                   }
                   value={content}
-                  onChange={(e) => setContent(e.target.value)}
+                  onChange={(e) => {
+                    setContent(e.target.value)
+                    console.log(content)
+                  }}
                   rows={10}
                 />
 
@@ -135,14 +168,15 @@ export const CreateGraph = (prompt: Prompt) => {
                   onClick={() => {
                     const updatedPrompt = {
                       ...prompt,
-                      // name,
+                      name,
                       description,
                       content: content.trim(),
+                      data
                     };
                     console.log(updatedPrompt)
 
                     setShowModal(false);
-                    fetch('/api/chat', {
+                    fetch('/api/controllers/masloRedirect', {
                       method: 'POST',
                       body: JSON.stringify(updatedPrompt),
                     })
