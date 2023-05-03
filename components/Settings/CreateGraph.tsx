@@ -1,19 +1,16 @@
 import { IconGraph } from '@tabler/icons-react';
-import { FC } from 'react';
 import { useTranslation } from 'next-i18next';
-import { SupportedExportFormats } from '@/types/export';
 import { SidebarButton } from '../Sidebar/SidebarButton';
-import * as Papa from 'papaparse';
-import { useState, useEffect, KeyboardEvent, useRef } from 'react';
+import { useState } from 'react';
 import { Prompt } from '@/types/prompt';
 import { useCreateReducer } from '@/hooks/useCreateReducer';
 
-interface Props {
-  message: string
-  // prompt: Prompt;
-  // onClose: () => void;
-  // onUpdatePrompt: (prompt: Prompt) => void;
-}
+// interface Props {
+//   message: string
+// prompt: Prompt;
+// onClose: () => void;
+// onUpdatePrompt: (prompt: Prompt) => void;
+// }
 
 /*
 export const Import: FC<Props> = ({ onImport }) => {
@@ -66,19 +63,13 @@ export const Import: FC<Props> = ({ onImport }) => {
 };
 */
 
-export const CreateGraph = (message: any) => {
+export const CreateGraph = (prompt: Prompt) => {
   const { t } = useTranslation('sidebar');
   const [showModal, setShowModal] = useState(false);
 
-
-  const handleClick = () => {
-    setShowModal(true);
-  };
-
-  const handleClose = () => {
-    setShowModal(false);
-  };
-
+  const [name, setName] = useState(prompt.name);
+  const [description, setDescription] = useState(prompt.description);
+  const [content, setContent] = useState(prompt.content);
 
   return (
     <>
@@ -117,8 +108,8 @@ export const CreateGraph = (message: any) => {
                   className="mt-2 w-full rounded-lg border border-neutral-500 px-4 py-2 text-neutral-900 shadow focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-[#40414F] dark:text-neutral-100"
                   style={{ resize: 'none' }}
                   placeholder={t('A description for your prompt.') || ''}
-                  // value={description}
-                  // onChange={(e) => setDescription(e.target.value)}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
                   rows={3}
                 />
 
@@ -133,8 +124,8 @@ export const CreateGraph = (message: any) => {
                       'Prompt content. Use {{}} to denote a variable. Ex: {{name}} is a {{adjective}} {{noun}}',
                     ) || ''
                   }
-                  // value={content}
-                  // onChange={(e) => setContent(e.target.value)}
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
                   rows={10}
                 />
 
@@ -145,12 +136,16 @@ export const CreateGraph = (message: any) => {
                     const updatedPrompt = {
                       ...prompt,
                       // name,
-                      // description,
-                      // content: content.trim(),
+                      description,
+                      content: content.trim(),
                     };
+                    console.log(updatedPrompt)
 
-                    // onUpdatePrompt(updatedPrompt);
                     setShowModal(false);
+                    fetch('/api/chat', {
+                      method: 'POST',
+                      body: JSON.stringify(updatedPrompt),
+                    })
                   }}
                 >
                   {t('Save')}
