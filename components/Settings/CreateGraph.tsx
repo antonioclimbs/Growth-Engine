@@ -7,14 +7,12 @@ import { processData } from './Import';
 import * as Papa from 'papaparse';
 
 interface Props {
-  prompt: {
-    name: string,
-    description: string,
-    content: string,
-  };
-}
+  name: string,
+  description: string,
+  content: string,
+};
 
-export const CreateGraph: FC<Props> = ({ prompt }) => {
+export const CreateGraph = (prompt: any) => {
   const { t } = useTranslation('sidebar');
   const [showModal, setShowModal] = useState(false);
 
@@ -50,7 +48,7 @@ export const CreateGraph: FC<Props> = ({ prompt }) => {
     return () => {
       window.removeEventListener('mousedown', handleMouseDown);
     };
-  }, [() => setShowModal(false)]);
+  }, [setShowModal]);
 
   useEffect(() => {
     nameInputRef.current?.focus();
@@ -166,11 +164,14 @@ export const CreateGraph: FC<Props> = ({ prompt }) => {
                   type="button"
                   className="w-full px-4 py-2 mt-6 border rounded-lg shadow border-neutral-500 text-neutral-900 hover:bg-neutral-100 focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-white dark:text-black dark:hover:bg-neutral-300"
                   onClick={() => {
+
+                    // cant figure out how to fix this query. won't pass in the name, description, and content values
                     const updatedPrompt = {
                       ...prompt,
-                      name,
-                      description,
-                      content: content.trim(),
+                      name: 'name of prompt',
+                      description: 'description of prompt',
+                      content: 'content of prompt',
+                      // content: content.trim(),
                       data
                     };
                     console.log(updatedPrompt)
@@ -190,37 +191,5 @@ export const CreateGraph: FC<Props> = ({ prompt }) => {
         </div >
       }
     </>
-    //   <>
-    //     <input
-    //       id="create-graph"
-    //       className="sr-only"
-    //       tabIndex={-1}
-    //       type="file"
-    //       accept=".csv, .json"
-    //       onChange={(e) => {
-    //         if (!e.target.files?.length) return;
-    //         const file = e.target.files[0];
-    //         const reader = new FileReader();
-
-    //         reader.onload = (e) => {
-    //           let parsedData;
-    //           if (file.type === "text/csv") {
-    //             const csvData = e.target?.result as string;
-    //             parsedData = Papa.parse(csvData);
-    //           } else {
-    //             parsedData = JSON.parse(e.target?.result as string);
-    //           };
-    //           // process data here
-    //           // processData(parsedData, file.name);
-    //         };
-    //         reader.readAsText(file);
-    //       }}
-    //     />
-    //     <SidebarButton
-    //       text={t('Create graph')}
-    //       icon={<IconGraph size={18} />}
-    //       onClick={handleClick}
-    //     />
-    //   </>
   );
 };
