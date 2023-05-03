@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import db from "../../../utils/server/models/ConversationModel";
 
 export default async function dataController(req: NextApiRequest, res: NextApiResponse) {
+  console.log('typeof req.body', typeof req.body)
   const { data } = req.body;
   const formatedData = { "data": data };
   const email = req.body.email ? req.body.email : 'hello@maslo.ai';

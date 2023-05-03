@@ -9,22 +9,24 @@ interface Props {
   onImport: (data: SupportedExportFormats) => void;
 }
 
+
+
 export const Import: FC<Props> = ({ onImport }) => {
   const { t } = useTranslation('sidebar');
   async function processData(parsedData: JSON, filename: string) {
     const conversation_id = '12345';
-    // const parsedData = Papa.parse(csvData);
+    localStorage.setItem('parsedData', JSON.stringify(parsedData));
+
     const body = JSON.stringify({
       data: parsedData,
       filename,
       conversation_id
     });
-    // console.log('checking what body is within processData function:', body)
 
     // do something with parsed data
     // need to get conversation id
     // look to conversation.ts
-    const response = await fetch('/api/controllers/dataController', {
+    await fetch('/api/controllers/dataController', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -32,8 +34,7 @@ export const Import: FC<Props> = ({ onImport }) => {
       body,
     });
 
-    console.log('response within Import.tsx', response);
-    // console.log('finished creating user and prompt')
+    console.log(localStorage)
   }
   return (
     <>

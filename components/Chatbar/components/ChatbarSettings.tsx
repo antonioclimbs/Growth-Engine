@@ -13,6 +13,7 @@ import { SidebarButton } from '../../Sidebar/SidebarButton';
 import ChatbarContext from '../Chatbar.context';
 import { ClearConversations } from './ClearConversations';
 import { PluginKeys } from './PluginKeys';
+import { CreateGraph } from '@/components/Settings/CreateGraph';
 
 export const ChatbarSettings = () => {
   const { t } = useTranslation('sidebar');
@@ -43,6 +44,8 @@ export const ChatbarSettings = () => {
       ) : null}
 
       <Import onImport={handleImportConversations} />
+
+      <CreateGraph message={''} />
 
       <SidebarButton
         text={t('Export data')}
