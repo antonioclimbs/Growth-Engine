@@ -20,8 +20,8 @@ export default async function masloRedirect(req: NextApiRequest, res: NextApiRes
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
     `, [uniqueId, email, formatedData, name, description, prompt, content, url_endpoint],
       console.log("Redirecting to ", url_endpoint));
-    res.status(201).json({ message: "will redirect" });
-    // res.redirect(`maslo.ai/conversation/${url_endpoint}`);
+    res.status(201).json({ message: "will redirect", url_endpoint });
+    // res.redirect(`https://maslo.ai/conversation/${url_endpoint}`);
   } catch (err) {
     console.error("Error with redirect: ", err);
     res.status(500).json({ message: "Error with redirect", err });

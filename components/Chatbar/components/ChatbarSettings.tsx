@@ -13,7 +13,7 @@ import { SidebarButton } from '../../Sidebar/SidebarButton';
 import ChatbarContext from '../Chatbar.context';
 import { ClearConversations } from './ClearConversations';
 import { PluginKeys } from './PluginKeys';
-import { CreateGraph } from '@/components/Settings/CreateGraph';
+import CreateGraph from '@/components/Settings/CreateGraph';
 import { Prompt } from '@/types/prompt';
 
 export const ChatbarSettings = () => {
@@ -47,11 +47,11 @@ export const ChatbarSettings = () => {
       <Import onImport={handleImportConversations} />
 
       <CreateGraph
-        prompt={{
-          name: '',
-          description: '',
-          content: '',
-        }}
+      // prompt={{
+      //   name: '',
+      //   description: '',
+      //   content: '',
+      // }}
       />
 
       <SidebarButton

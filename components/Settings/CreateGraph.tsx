@@ -2,7 +2,6 @@ import { IconGraph } from '@tabler/icons-react';
 import { useTranslation } from 'next-i18next';
 import { SidebarButton } from '../Sidebar/SidebarButton';
 import { useState, useRef, KeyboardEvent, useContext, useEffect, FC } from 'react';
-import { Prompt } from '@/types/prompt';
 import { processData } from './Import';
 import * as Papa from 'papaparse';
 
@@ -12,47 +11,39 @@ interface Props {
   content: string,
 };
 
-export const CreateGraph = (prompt: any) => {
+interface FormData {
+  name: string;
+  email: string;
+  description: string;
+  content: string;
+  data: string;
+}
+
+function handleSubmit(event: React.FormEvent<HTMLFormElement>, formData: FormData) {
+  event.preventDefault();
+  console.log(formData);
+}
+
+export default function CreateGraph() {
   const { t } = useTranslation('sidebar');
   const [showModal, setShowModal] = useState(false);
-
-  const [name, setName] = useState(prompt.name);
-  const [description, setDescription] = useState(prompt.description);
-  const [content, setContent] = useState(prompt.content);
   const [data, setParsedData] = useState('')
 
-  const modalRef = useRef<HTMLDivElement>(null);
-  const nameInputRef = useRef<HTMLInputElement>(null);
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
+    email: '',
+    description: '',
+    content: '',
+    data: '',
+  });
 
-  const handleEnter = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      // onUpdatePrompt({ ...prompt, name, description, content: content.trim() });
-      setShowModal(false);
-    }
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    console.log('name:', event.target.name, 'value:', event.target.value)
+    setFormData({
+      ...formData,
+      [event.target.name]: event.target.value,
+    });
   };
-
-  useEffect(() => {
-    const handleMouseDown = (e: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
-        window.addEventListener('mouseup', handleMouseUp);
-      }
-    };
-
-    const handleMouseUp = (e: MouseEvent) => {
-      window.removeEventListener('mouseup', handleMouseUp);
-      setShowModal(false);
-    };
-
-    window.addEventListener('mousedown', handleMouseDown);
-
-    return () => {
-      window.removeEventListener('mousedown', handleMouseDown);
-    };
-  }, [setShowModal]);
-
-  useEffect(() => {
-    nameInputRef.current?.focus();
-  }, []);
 
   return (
     <>
@@ -109,8 +100,8 @@ export const CreateGraph = (prompt: any) => {
                 className="hidden sm:inline-block sm:h-screen sm:align-middle"
                 aria-hidden="true"
               />
-
-              <div
+              <form
+                onSubmit={(event) => handleSubmit(event, formData)}
                 className="dark:border-netural-400 inline-block max-h-[400px] transform overflow-y-auto rounded-lg border border-gray-300 bg-white px-4 pt-5 pb-4 text-left align-bottom shadow-xl transition-all dark:bg-[#202123] sm:my-8 sm:max-h-[600px] sm:w-full sm:max-w-lg sm:p-6 sm:align-middle"
                 role="dialog"
               >
@@ -120,11 +111,10 @@ export const CreateGraph = (prompt: any) => {
                 <input
                   className="mt-2 w-full rounded-lg border border-neutral-500 px-4 py-2 text-neutral-900 shadow focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-[#40414F] dark:text-neutral-100"
                   placeholder={t('A name for your prompt.') || ''}
-                  value={name}
-                  onChange={(e) => {
-                    setName(e.target.value)
-                    console.log(name)
-                  }}
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
                 />
                 <div className="mt-6 text-sm font-bold text-black dark:text-neutral-200">
                   {t('Description')}
@@ -133,63 +123,49 @@ export const CreateGraph = (prompt: any) => {
                   className="mt-2 w-full rounded-lg border border-neutral-500 px-4 py-2 text-neutral-900 shadow focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-[#40414F] dark:text-neutral-100"
                   style={{ resize: 'none' }}
                   placeholder={t('A description for your prompt.') || ''}
-                  value={description}
-                  onChange={(e) => {
-                    setDescription(e.target.value)
-                    console.log(description)
-                  }}
                   rows={3}
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
                 />
-
                 <div className="mt-6 text-sm font-bold text-black dark:text-neutral-200">
                   {t('What do you want to do with your data?')}
                 </div>
                 <textarea
                   className="mt-2 w-full rounded-lg border border-neutral-500 px-4 py-2 text-neutral-900 shadow focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-[#40414F] dark:text-neutral-100"
                   style={{ resize: 'none' }}
-                  placeholder={
-                    t(
-                      'Use {{}} to denote a variable. Ex: {{name}} is a {{adjective}} {{noun}}',
-                    ) || ''
-                  }
-                  value={content}
-                  onChange={(e) => {
-                    setContent(e.target.value)
-                    console.log(content)
-                  }}
+                  placeholder={t('Use {{}} to denote a variable. Ex: {{name}} is a {{adjective}} {{noun}}',) || ''}
                   rows={10}
-                />
-
+                  name="content"
+                  value={formData.content}
+                  onChange={handleChange} />
                 <button
-                  type="button"
+                  type="submit"
                   className="w-full px-4 py-2 mt-6 border rounded-lg shadow border-neutral-500 text-neutral-900 hover:bg-neutral-100 focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-white dark:text-black dark:hover:bg-neutral-300"
                   onClick={() => {
-
                     // cant figure out how to fix this query. won't pass in the name, description, and content values
-                    const updatedPrompt = {
-                      ...prompt,
-                      name: 'name of prompt',
-                      description: 'description of prompt',
-                      content: 'content of prompt',
-                      // content: content.trim(),
-                      data
-                    };
-                    console.log(updatedPrompt)
-
+                    const body = {}
+                    formData.data = data;
+                    console.log(formData)
                     setShowModal(false);
                     fetch('/api/controllers/masloRedirect', {
                       method: 'POST',
-                      body: JSON.stringify(updatedPrompt),
+                      body: JSON.stringify(formData),
                     })
+                      .then(res => res.json())
+                      .then((data) => {
+                        console.log(data)
+                        const { url_endpoint } = data
+                        window.location.href = `${url_endpoint}`
+                      })
                   }}
                 >
                   {t('Save')}
                 </button>
-              </div>
+              </form>
             </div>
           </div>
-        </div >
-      }
+        </div>}
     </>
   );
 };
