@@ -16,6 +16,7 @@ interface FormData {
   email: string;
   description: string;
   content: string;
+  prompt: string;
   data: string;
 }
 
@@ -34,6 +35,7 @@ export default function CreateGraph() {
     email: '',
     description: '',
     content: '',
+    prompt: '',
     data: '',
   });
 
@@ -102,7 +104,7 @@ export default function CreateGraph() {
               />
               <form
                 onSubmit={(event) => handleSubmit(event, formData)}
-                className="dark:border-netural-400 inline-block max-h-[400px] transform overflow-y-auto rounded-lg border border-gray-300 bg-white px-4 pt-5 pb-4 text-left align-bottom shadow-xl transition-all dark:bg-[#202123] sm:my-8 sm:max-h-[600px] sm:w-full sm:max-w-lg sm:p-6 sm:align-middle"
+                className="dark:border-netural-400 inline-block max-h-[400px] transform overflow-y-auto rounded-lg border border-gray-300 bg-white px-4 pt-5 pb-4 text-left align-bottom shadow-xl transition-all dark:bg-[#202123] sm:my-8 sm:max-h-[800px] sm:w-full sm:max-w-lg sm:p-6 sm:align-middle"
                 role="dialog"
               >
                 <div className="text-sm font-bold text-black dark:text-neutral-200">
@@ -114,6 +116,18 @@ export default function CreateGraph() {
                   type="text"
                   name="name"
                   value={formData.name}
+                  onChange={handleChange}
+                />
+                <div className="mt-6 text-sm font-bold text-black dark:text-neutral-200">
+                  {t('Email')}
+                </div>
+                <input
+                  className="mt-2 w-full rounded-lg border border-neutral-500 px-4 py-2 text-neutral-900 shadow focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-[#40414F] dark:text-neutral-100"
+                  placeholder={t('hello@maslo.ai') || ''}
+                  type="text"
+                  name="email"
+                  required={true}
+                  value={formData.email}
                   onChange={handleChange}
                 />
                 <div className="mt-6 text-sm font-bold text-black dark:text-neutral-200">
@@ -156,7 +170,7 @@ export default function CreateGraph() {
                       .then((data) => {
                         console.log(data)
                         const { url_endpoint } = data
-                        window.location.href = `${url_endpoint}`
+                        // window.location.href = `${url_endpoint}`
                       })
                   }}
                 >

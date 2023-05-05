@@ -46,13 +46,7 @@ export const ChatbarSettings = () => {
 
       <Import onImport={handleImportConversations} />
 
-      <CreateGraph
-      // prompt={{
-      //   name: '',
-      //   description: '',
-      //   content: '',
-      // }}
-      />
+      <CreateGraph />
 
       <SidebarButton
         text={t('Export data')}
