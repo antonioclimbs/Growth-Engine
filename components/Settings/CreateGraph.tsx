@@ -40,7 +40,7 @@ export default function CreateGraph() {
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    console.log('name:', event.target.name, 'value:', event.target.value)
+    // console.log('name:', event.target.name, 'value:', event.target.value)
     setFormData({
       ...formData,
       [event.target.name]: event.target.value,
