@@ -86,7 +86,7 @@ export default function CreateGraph() {
           ) as HTMLInputElement;
           if (createFile) {
             createFile.click();
-            console.log(createFile)
+            // console.log(createFile)
           }
 
           setShowModal(true)
@@ -160,7 +160,7 @@ export default function CreateGraph() {
                     // cant figure out how to fix this query. won't pass in the name, description, and content values
                     const body = {}
                     formData.data = data;
-                    console.log(formData)
+                    // console.log(formData)
                     setShowModal(false);
                     fetch('/api/controllers/masloRedirect', {
                       method: 'POST',
@@ -168,9 +168,9 @@ export default function CreateGraph() {
                     })
                       .then(res => res.json())
                       .then((data) => {
-                        console.log(data)
+                        // console.log(data)
                         const { url_endpoint } = data
-                        // window.location.href = `${url_endpoint}`
+                        window.location.href = `${url_endpoint}`
                       })
                   }}
                 >
