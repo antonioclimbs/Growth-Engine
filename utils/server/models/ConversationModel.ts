@@ -8,12 +8,12 @@ const dbname = process.env.DATABASE_NAME;
 const psqlpassword = process.env.POSTGRESQL_PASSWORD;
 
 const pool = new Pool({
-  connectionString: testURI,
-  // user: username,
-  // host: ip,
-  // database: dbname,
-  // password: psqlpassword,
-  // port: 5432,
+  // connectionString: testURI,
+  user: username,
+  host: ip,
+  database: dbname,
+  password: psqlpassword,
+  port: 5432,
 });
 
 const db = {
