@@ -1,7 +1,7 @@
 import { IconGraph } from '@tabler/icons-react';
 import { useTranslation } from 'next-i18next';
 import { SidebarButton } from '../Sidebar/SidebarButton';
-import { useState, useRef, KeyboardEvent, useContext, useEffect, FC } from 'react';
+import { useState } from 'react';
 import { processData } from './Import';
 import * as Papa from 'papaparse';
 
@@ -40,7 +40,6 @@ export default function CreateGraph() {
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    // console.log('name:', event.target.name, 'value:', event.target.value)
     setFormData({
       ...formData,
       [event.target.name]: event.target.value,
@@ -65,12 +64,9 @@ export default function CreateGraph() {
             if (file.type === "text/csv") {
               const csvData = e.target?.result as string;
               parsedData = Papa.parse(csvData);
-              // parsedData = Papa.parse(csvData);
             } else {
               parsedData = JSON.parse(e.target?.result as string);
-              // parsedData = JSON.parse(e.target?.result as string);
             };
-            // process data here
             setParsedData(parsedData)
             processData(parsedData, file.name);
           };
@@ -86,7 +82,6 @@ export default function CreateGraph() {
           ) as HTMLInputElement;
           if (createFile) {
             createFile.click();
-            // console.log(createFile)
           }
 
           setShowModal(true)
@@ -157,10 +152,7 @@ export default function CreateGraph() {
                   type="submit"
                   className="w-full px-4 py-2 mt-6 border rounded-lg shadow border-neutral-500 text-neutral-900 hover:bg-neutral-100 focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-white dark:text-black dark:hover:bg-neutral-300"
                   onClick={() => {
-                    // cant figure out how to fix this query. won't pass in the name, description, and content values
-                    const body = {}
                     formData.data = data;
-                    // console.log(formData)
                     setShowModal(false);
                     fetch('/api/controllers/masloRedirect', {
                       method: 'POST',
@@ -168,7 +160,6 @@ export default function CreateGraph() {
                     })
                       .then(res => res.json())
                       .then((data) => {
-                        // console.log(data)
                         const { url_endpoint } = data
                         window.location.href = `${url_endpoint}`
                       })
